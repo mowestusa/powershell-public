@@ -1,0 +1,8 @@
+#+TITLE: Readme.org
+#+AUTHOR: mowest
+
+* PowerShell-Public
+My collection of PowerShell scripts to be shared with public.
+** fetchgdoc-public.ps1
+*** Depends: Module PSGSuite needs to be install and setup before use.
+   This script uses .gdoc files saved on your local hard drive to find the corresponding files on your GDrive account and export them in the LibreOffice format saved to the original folder on your hard drive where the .gdoc file was found.
