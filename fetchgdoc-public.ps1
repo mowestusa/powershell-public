@@ -73,16 +73,25 @@ $GdocIDandName | ForEach-Object {Export-GSDriveFile -FileId $_.id -Type "OpenOff
 
 # ACTUAL PWSH SCRIPT DOING THE WORK
 # ---------------------------------
-$GdocArray = Get-ChildItem -Path /home/mowest/Documents/*.gdoc -Recurse
-$GdocDoc_idArray = ForEach-Object {Get-Content $GdocArray | ConvertFrom-Json | Select-Object -ExpandProperty doc_id}
-$GdocDirectory = ForEach-Object {$GdocArray | Select-Object -ExpandProperty FullName}
+$GdocArray = Get-ChildItem -Path /home/mowest/Documents/*.gdoc -Recurse # Create a master collection . in this a list of files
+#$GdocDoc_idArray = ForEach-Object {Get-Content $GdocArray | ConvertFrom-Json | Select-Object -ExpandProperty doc_id}
+#$GdocDirectory = ForEach-Object {$GdocArray | Select-Object -ExpandProperty FullName}
 
-$i = 0
+$i = 0 #not neccessary We can use this to increment. I can give an example of its use.
 
-$GdocIDandName = ($GdocDoc_idArray,$GdocDirectory)[1] |
-  foreach {New-Object psobject -property @{
-	       id = $GdocDoc_idArray[$i]
-	       name = $GdocDirectory[$i++]
-	   }}
+$GdocArray| ForEach-Object { # instead of doing a foreach on each collection or property we produce 'one' collection and  then 'take action' oneitem at a time.
 
-$GdocIDandName | ForEach-Object {Export-GSDriveFile -FileId $_.id -Type "OpenOfficeDoc" -OutFilePath ($_.name -replace '.gdoc','.odt')}
+       Write-output "This is the $i file of the directory out of $gdocarray.count. Retrieving docid from file $_.fullname"
+       $Docid = Get-Content $_.fullname | ConvertFrom-Json | Select-Object -ExpandProperty doc_id
+       Export-GSDriveFile -FileId $docid -Type "OpenOfficeDoc" -OutFilePath ($_.name -replace '.gdoc','.odt') # We may need to test this . 
+       Write-output " Converting $_.fullname to Officedoc"
+       $i++
+
+}
+#$GdocIDandName = ($GdocDoc_idArray,$GdocDirectory)[1] |
+ # foreach {New-Object psobject -property @{
+#	       id = $GdocDoc_idArray[$i]
+#	       name = $GdocDirectory[$i++]
+#	   }}
+#
+#$GdocIDandName | ForEach-Object {Export-GSDriveFile -FileId $_.id -Type "OpenOfficeDoc" -OutFilePath ($_.name -replace '.gdoc','.odt')}
