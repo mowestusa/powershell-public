@@ -83,7 +83,7 @@ $GdocArray| ForEach-Object { # instead of doing a foreach on each collection or 
 
        Write-output "This is the $i file of the directory out of $gdocarray.count. Retrieving docid from file $_.fullname"
        $Docid = Get-Content $_.fullname | ConvertFrom-Json | Select-Object -ExpandProperty doc_id
-       Export-GSDriveFile -FileId $docid -Type "OpenOfficeDoc" -OutFilePath ($_.name -replace '.gdoc','.odt')
+       Export-GSDriveFile -FileId $docid -Type "OpenOfficeDoc" -OutFilePath ($_.name -replace '.gdoc','.odt') # We may need to test this . 
        Write-output " Converting $_.fullname to Officedoc"
        $i++
 
